@@ -1,0 +1,61 @@
+Sub clean1()
+'
+' clean1 Macro
+'
+
+'
+YesNo = MsgBox("Would like to proceed cleaning raw data?", vbYesNo)
+
+Select Case YesNo
+
+Case vbYes
+
+
+    Columns("A:A").Select
+    Selection.NumberFormat = "m/d/yyyy"
+    Columns("B:B").Select
+    Selection.Replace What:="""", Replacement:="", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False, FormulaVersion:=xlReplaceFormula2
+    Range("C:C,G:G").Select
+    Range("G1").Activate
+    Selection.Delete Shift:=xlToLeft
+    Range("I2").Select
+    Range(Selection, Selection.End(xlToLeft)).Select
+    Range(Selection, Selection.End(xlDown)).Select
+    ActiveWorkbook.Worksheets("Raw data").Sort.SortFields.Clear
+    ActiveWorkbook.Worksheets("Raw data").Sort.SortFields.Add2 Key:=Range( _
+        "A2:A29"), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+        xlSortNormal
+    ActiveWorkbook.Worksheets("Raw data").Sort.SortFields.Add2 Key:=Range( _
+        "D2:D29"), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+        xlSortNormal
+    ActiveWorkbook.Worksheets("Raw data").Sort.SortFields.Add2 Key:=Range( _
+        "C2:C29"), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+        xlSortNormal
+    With ActiveWorkbook.Worksheets("Raw data").Sort
+        .SetRange Range("A2:I29")
+        .Header = xlGuess
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+    ActiveWindow.SmallScroll Down:=-6
+    Range("A1").Select
+    Range(Selection, Selection.End(xlToRight)).Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Sheets("Cleaned").Select
+    ActiveWindow.SmallScroll Down:=-21
+    Range("B1").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    ActiveWindow.SmallScroll Down:=-3
+    
+
+Case vbNo
+
+End Select
+
+End Sub
